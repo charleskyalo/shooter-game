@@ -5,20 +5,20 @@ const canvas = document.querySelector("canvas");
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
-console.log(canvas)
+
 
 const canvasContext = canvas.getContext('2d');
 
 
-class Player { 
-    constructor(x,y,radius,color) { 
+class Player {
+    constructor(x, y, radius, color) {
         this._x = x;
         this._y = y;
         this._radius = radius;
         this._color = color;
     }
-
-    draw() { 
+    
+    draw() {
         canvasContext.beginPath();
         canvasContext.arc(this._x, this._y, this._radius, 0, Math.PI * 2, false)
         canvasContext.fillStyle = this._color;
@@ -30,8 +30,96 @@ class Player {
 const centerY = canvas.height / 2;
 const centerX = canvas.width / 2;
 
-
-
 const player = new Player(centerX, centerY, 30, "#737373");
 player.draw();
-console.log(player);
+
+
+/* const projectiles */
+class Projectile {
+    constructor(x, y, radius, color, velocity) {
+        this._x = x;
+        this._y = y;
+        this._radius = radius;
+        this._color = color;
+        this._velocity = velocity;
+    }
+    
+    draw() {
+        canvasContext.beginPath();
+        canvasContext.arc(this._x, this._y, this._radius, 0, Math.PI * 2, false)
+        canvasContext.fillStyle = this._color;
+        canvasContext.fill();
+    }
+    update() {
+        this.draw();
+        this._x += this._velocity.x;
+        this._y += this._velocity.y;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const projectiles = [];
+
+// Animation frame loop(); 
+const animate = () => {
+    requestAnimationFrame(animate);
+    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+    player.draw();
+    projectiles.forEach(projectile => {
+        projectile.update();
+    });
+    
+    /*     console.log("good");
+    projectile.draw();
+    projectile.update(); */
+}
+
+// window can be omitted;
+window.addEventListener('click', (event) => {
+    const { x, y } = event;
+    const angle = Math.atan2(y - centerY, x - centerX);
+    const radius = Math.floor(Math.random() * 20);
+    const velocity = {
+        x: Math.cos(angle),
+        y: Math.sin(angle),
+    }
+    
+    projectiles.push(new Projectile(centerX, centerY, radius, "red", velocity));
+    
+    
+});
+
+animate();
